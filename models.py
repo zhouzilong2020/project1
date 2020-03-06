@@ -18,22 +18,38 @@ class User(db.Model):
         self.password = password
         self.validity = 0
 
-    def login(self):
-        #判断当前用户是否存在  TODO::注意安全性检查！
-        exist_user = db.session.execute(f"SELECT * .\
-                                          FROM users .\
-                                          WHERE user_id = {self.user_id} AND password = {self.password}")
-        if exist_user != 0:
-            validity = 1
-            self.id = db
-            print("login successfully!")
-        else :
-            print("does not exist such id or passworf faills to match")
+    def currentStatus(self):
+        return True if validity == 1 else False
         
+
+    #log in user
+    def logIn(self):
+        #判断当前用户是否存在  TODO::注意安全性检查！
+        exist_user_password = db.session.execute(f"SELECT password .\
+                                          FROM users .\
+                                          WHERE user_id = {self.user_id}").first()
+        #当前用户名存在，并且密码匹配
+        if exist_user_password is not None: 
+            if exist_user_password == self.password:
+                validity = 1
+                print("login successfully!")
+        else:
+            print("does not exist such id or passworf faills to match")
+
+    #log out user
+    def logOut(self):
+        if validity == 1:
+            validity = 0
+            print("you have logged out")
+        else:
+            print("error!")
+        
+    #add a new user
     def addUser(self):
         is_exist = db.session.excute(f"SELECT count(*) .\
                                        FROM users .\
                                        WHERE user_id = {self.user_id}")
+        #current user_id does not exist
         if is_exist == 0:
             #increase user number by 1
             count += 1
@@ -42,16 +58,16 @@ class User(db.Model):
             print("regislation success!")
         else:
             print("user_id already exist!")
-    
+
+    #delete an user
     def deleteUser(self):
-        #user have logined 
+        #user have validity
         if validity == 1:
             db.session.execute(f"DELETE FROM users .\
-                                 WHERE users.id = {self.")
-
-
-
-
+                                 WHERE users.id = {self.user_id}")
+            print("current user have been removed")
+        else:
+            print("please log in first")
 
 
 class Book(db.Model):
@@ -65,8 +81,35 @@ class Book(db.Model):
     author = db.Column(db.String, nullable = False)
     year = db.Column(db.Integer, nullable = False)
 
+    def __init__(self, isbn, auther, title):
+        self.isbn = isbn
+        self.auther = auther
+        self.title = title
+
+    #insert a book to database
+    def insert(self):
+        count+=1
+        self.id = Book.id
+        db.session.excute("") #TODO
+
+    #search a book through isbn/auther/title with partialy or entirely information 
+    def search(self):
+        isbnExist = db.session.excute(f"SELECT * .\
+                                        FROM books .\
+                                        WHERE books.isbn LIKE ''%{self.isbn}%'' ").fetchall()
+        titleExist = db.session.excute(f"SELECT * .\
+                                         FROM books .\
+                                         WHERE books.title LIKE ''%{self.title}%'' ").fetchall()
+        AuthorExist = db.session.excute(f"SELECT * .\
+                                          FROM books .\
+                                          WHERE books.title LIKE ''%{self.author}%'' ").fetchall()
+        return [isbnExist, titleExist, AuthorExist]
+
+
+
 
 class Review(db.Model):
+    count = 0
 
     __tablename__ = "reviews"
 
@@ -80,6 +123,18 @@ class Review(db.Model):
     review_author = db.Column(db.Integer, db.ForeignKey("users.id"))
     users = relationship("User", backref="review")
 
-    content = db.Column(db.String, nullable = False)
+    comment = db.Column(db.String, nullable = False)
     rate = db.Column(db.Integer, nullable = False)
     
+    def writeReview(self, comment, title, rate, revier_author):
+        count +=1
+        self.id = Review.id
+        db.session.excute(f"INSERT INTO reviews .\
+                           (id, title, review_author, comment, rate) .\
+                           VALUES ('{self.id}','{self.title}', '{self.review_author}', '{self.comment}', '{self.rate}' ")
+        print("comment success!")
+        
+
+
+
+        

@@ -1,11 +1,6 @@
-class a:
-    i = 0
 
-    def __init__(self):
-        #python中静态成员变量要用类名来引用！
-        print(a.i)
-        a.i += 1
-        print(a.i)
+malicious = " OR '1' == '1'"
+print(":malicious", {"malicious" : malicious})
 
-b = a()
-c = a()
+a = "'1'"
+print(":a", {"a" : a})
