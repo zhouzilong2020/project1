@@ -9,7 +9,7 @@ class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key = True)
 
-    user_id = db.Column(db.String, primary_key = True, nullable = False)
+    user_id = db.Column(db.String, primary_key = True)
     password = db.Column(db.String, nullable = False)
 
     def __init__(self, user_id, password):
@@ -76,8 +76,8 @@ class Book(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
 
+    title = db.Column(db.String, primary_key = True)
     isbn = db.Column(db.String, primary_key = True)
-    title = db.Column(db.String, nullable = False)
     author = db.Column(db.String, nullable = False)
     year = db.Column(db.Integer, nullable = False)
 
@@ -106,8 +106,6 @@ class Book(db.Model):
         return [isbnExist, titleExist, AuthorExist]
 
 
-
-
 class Review(db.Model):
     count = 0
 
@@ -116,12 +114,14 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key = True)
 
     #与books的联系
-    title = db.Column(db.String, db.ForeignKey("books.id"))
-    book = relationship("Book", backref="review")
+    title = db.Column(db.String, db.ForeignKey("books.title"))
+    #反向联系
+    book = relationship("Book", back_populates="reviews")
 
     #与users的联系
-    review_author = db.Column(db.Integer, db.ForeignKey("users.id"))
-    users = relationship("User", backref="review")
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    #反向联系
+    users = relationship("User", back_populates="reviews")
 
     comment = db.Column(db.String, nullable = False)
     rate = db.Column(db.Integer, nullable = False)
@@ -130,8 +130,8 @@ class Review(db.Model):
         count +=1
         self.id = Review.id
         db.session.excute(f"INSERT INTO reviews .\
-                           (id, title, review_author, comment, rate) .\
-                           VALUES ('{self.id}','{self.title}', '{self.review_author}', '{self.comment}', '{self.rate}' ")
+                           (id, title, user_id, comment, rate) .\
+                           VALUES ('{self.id}','{self.title}', '{self.user_id}', '{self.comment}', '{self.rate}' ")
         print("comment success!")
         
 
