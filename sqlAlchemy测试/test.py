@@ -40,7 +40,6 @@ class A(Base):
 class B(Base):
     __tablename__ = 'b'
     id = db.Column(db.Integer, primary_key = True)
-
     title = db.Column(db.String, primary_key = True)
     isbn = db.Column(db.String, primary_key = True)
     author = db.Column(db.String, nullable = False)

@@ -76,7 +76,7 @@ class Book(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
 
-    title = db.Column(db.String, primary_key = True)
+    title = db.Column(db.String, primary_key = True, unique = True)
     isbn = db.Column(db.String, primary_key = True)
     author = db.Column(db.String, nullable = False)
     year = db.Column(db.Integer, nullable = False)
@@ -113,13 +113,14 @@ class Review(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
 
+    #TODO: read reference paper！https://docs.sqlalchemy.org/en/13/core/constraints.html
     #与books的联系
-    title = db.Column(db.String, db.ForeignKey("books.title"))
+    title = db.Column(db.String, db.ForeignKey("books.title"), nullable = False)
     #反向联系
     book = relationship("Book", back_populates="reviews")
 
     #与users的联系
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    user_id = db.Column(db.String, db.ForeignKey("users.user_id"), nullable = False)
     #反向联系
     users = relationship("User", back_populates="reviews")
 
