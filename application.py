@@ -1,10 +1,12 @@
 import os
 from flask import Flask, session
 from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 app = Flask(__name__)
+db = AQLAlchemy
 
 #local database:: postgresql://postgres:20001003@localhost:5432/test
 # Check for environment variable
@@ -28,7 +30,9 @@ db = scoped_session(sessionmaker(bind=engine)) #db is a session and is bind to e
 def index():
     return "Project 1: TODO"
 
+
 def main():
+    
     db.create_all()
 
 if __name__ == "__main__":
