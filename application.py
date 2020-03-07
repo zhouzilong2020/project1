@@ -32,7 +32,7 @@ def index():
 
 
 def main():
-    
+
     db.create_all()
 
 if __name__ == "__main__":
