@@ -1,20 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>{{ name }}'s Watchlist</title>
-</head>
-<body>
-    <h2>{{ name }}'s Watchlist</h2>
-    {# 使用 length 过滤器获取 movies 变量的长度 #}
-    <p>{{ movies|length }} Titles</p>
-    <ul>
-        {% for movie in movies %}  {# 迭代 movies 变量 #}
-        <li>{{ movie.title }} - {{ movie.year }}</li>  {# 等同于 movie['title'] #}
-        {% endfor %}  {# 使用 endfor 标签结束 for 语句 #}
-    </ul>
-    <footer>
-        <small>&copy; 2018 <a href="http://helloflask.com/tutorial">HelloFlask</a></small>
-    </footer>
-</body>
-</html>
+{% extends "layout.html" %}
+
+
+{% block title %}
+Library System
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+  <div class="page-header">
+    <h1> Library Retrieval System <small> v1.0 </small></h1>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <h1>Welcome!</h1>
+  <p>To discover thousands of books
+      , review comment from other
+      and leave your own footprint on each book!
+  </p>
+  <p>
+    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg" href="#" role="button">Login in</a>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Register in</a>
+  </p>
+  <p>
+    <small>If your haven't regiter yet, please register first!</small>
+  </p>
+</div>
+
+<address>
+  <strong>ZiLong Zhou</strong><br>
+  Caoan Highway 4800
+  Tongji University<br>
+  ShangHai, PRC <br>
+</address>
+{% endblock %}
