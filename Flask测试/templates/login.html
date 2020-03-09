@@ -5,6 +5,10 @@
 {% endblock %}
 
 {% block body %}
+
+{% block error_message %}
+{% endblock %}
+
 <div class="container-fluid">
   <h1 align = "center">Login now!</h1>
 </div>
@@ -16,13 +20,13 @@
   </div>
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" class="form-control" name="password" id = password placeholder="Password">
+    <input type="password" class="form-control" name="password" id ="password" placeholder="Password">
   </div>
 
   <div class="text-center">
     <div class="checkbox">
       <label>
-        <input type="checkbox"> I agree my review to be post in this website.
+        <input type="checkbox" name="checkbox" id="checkbox"> I agree my review to be post in this website.
       </label>
     </div>
     <button type="submit" class="btn.btn-default">LOGIN</button>

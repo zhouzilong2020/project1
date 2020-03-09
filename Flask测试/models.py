@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from werkzeug import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 
@@ -10,7 +11,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
 
     user_id = db.Column(db.String, primary_key = True, unique = True)
-    password = db.Column(db.String, nullable = False)
+    #hash value of password
+    password_hash = db.Column(db.String, nullable = False)
 
     def __init__(self, user_id, password):
         #赋值user_id，user_password
@@ -24,17 +26,25 @@ class User(db.Model):
     def currentStatus(self):
         return True if validity == 1 else False
 
+    def set_password(self, password):
+         #save password hash value into class's attribute
+         self.password_hash = generate_password_hash(password)
+
+    def validate_password(self, password):
+        #return a boolen value
+        return check_password_hash(self.password_hash, password)
+
 
     #log in user
     def login(self):
-        #判断当前用户是否存在  TODO::注意安全性检查！
+        #判断当前用户是否存在
         try:
             exist_user_password = db.session.execute(f'''SELECT password FROM users WHERE user_id = "{self.user_id}" ''').first()
-        #当前用户名存在，并且密码匹配
+            #当前用户名存在，并且密码匹配
             if exist_user_password is not None:
-                if exist_user_password == self.password:
-                    validity = 1
-                    return True
+                if validate_password(exist_user_password):
+                    validaty = 1
+            return True
         except:
             return False
 

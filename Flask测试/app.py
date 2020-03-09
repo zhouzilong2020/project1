@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-
 from models import *
 
 app = Flask(__name__)
@@ -22,21 +21,34 @@ def index():
 def test():
     return render_template('test.html')
 
+@app.route('/register', methods = ['GET', 'POST'])
+def register():
+
+
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
+        #user didn't clik checkbox
+        if request.form.get("checkbox"):
+            1+1
         user = User(request.form.get('user_id'), request.form.get('password'))
-        print(user.user_id, user.password)
         #如果成功登录
         if user.login():
-            return redirect(url_for('homepage'), user=user)
+            return redirect(url_for('homepage'))
         else:
-            return redirect(url_for('index'))
+            return redirect(url_for('loginNoFound'))
 
     return render_template('login.html')
 
+@app.route('/login/nofound', methods=['GET','POST'])
+def loginNoFound():
+    if request.method == 'POST':
+        login()
+    return render_template('login_nofound.html')
+
+
 @app.route('/homepage', methods = ['GET', 'POST'])
-def homepage():
+def homepage(user):
     user = User('meizijun' ,12)
     if request.method == 'POST':
         book = Book(request.form.get('title'),
@@ -49,16 +61,6 @@ def homepage():
             return redirect(url_for('error_book_no_found'))
 
     return render_template('homepage.html', user=user)
-
-
-
-
-
-
-
-
-
-
 
 
 def createTable():
