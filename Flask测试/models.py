@@ -21,16 +21,16 @@ class User(db.Model):
         self.user_id = str(user_id)
         self.password = str(password)
         self.validity = 0
-
+    
     def __repr__(self):
         return '<user %s>' % self.user_id
 
     def currentStatus(self):
         return True if validity == 1 else False
 
-    def set_password(self, password):
+    def set_password(self):
          #save password hash value into class's attribute
-         self.password_hash = generate_password_hash(password)
+         self.password_hash = generate_password_hash(self.password)
 
     def validate_password(self, password):
         #return a boolen value
@@ -61,16 +61,16 @@ class User(db.Model):
 
     #add a new user
     def addUser(self):
-        is_exist = db.session.execute(f"SELECT count(*) \
+        is_exist = db.session.execute(f"SELECT * \
                                        FROM users \
-                                       WHERE user_id = '{self.user_id}' ")
+                                       WHERE user_id = '{self.user_id}' ").first()
         #current user_id does not exist
-        if is_exist == 0:
+        if is_exist is None:
             #increase user number by 1
-            count += 1
+            User.count += 1
             #set user unique id in database
-            self.id = count
-            self.password_hash = set_password(self.password)
+            self.id = User.count
+            self.set_password()
             db.session.execute(f"INSERT INTO users\
                                  (id, user_id, password_hash)\
                                  VALUES('{self.id}', ‘{self.user_id}', '{self.password_hash}')")
