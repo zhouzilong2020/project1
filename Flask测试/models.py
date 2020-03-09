@@ -13,11 +13,13 @@ class User(db.Model):
     user_id = db.Column(db.String, primary_key = True, unique = True)
     #hash value of password
     password_hash = db.Column(db.String, nullable = False)
+    password = None
 
+    #password is transfered into hash value
     def __init__(self, user_id, password):
         #赋值user_id，user_password
-        self.user_id = user_id
-        self.password = password
+        self.user_id = str(user_id)
+        self.password = str(password)
         self.validity = 0
 
     def __repr__(self):
@@ -34,12 +36,13 @@ class User(db.Model):
         #return a boolen value
         return check_password_hash(self.password_hash, password)
 
-
     #log in user
     def login(self):
         #判断当前用户是否存在
         try:
-            exist_user_password = db.session.execute(f'''SELECT password FROM users WHERE user_id = "{self.user_id}" ''').first()
+            exist_user_password = db.session.execute(f'''SELECT password \
+                                                         FROM users \
+                                                         WHERE user_id == "{self.user_id}" ''').first()
             #当前用户名存在，并且密码匹配
             if exist_user_password is not None:
                 if validate_password(exist_user_password):
@@ -58,25 +61,29 @@ class User(db.Model):
 
     #add a new user
     def addUser(self):
-        is_exist = db.session.excute(f"SELECT count(*) .\
-                                       FROM users .\
-                                       WHERE user_id = {self.user_id}")
+        is_exist = db.session.execute(f"SELECT count(*) \
+                                       FROM users \
+                                       WHERE user_id = '{self.user_id}' ")
         #current user_id does not exist
         if is_exist == 0:
             #increase user number by 1
             count += 1
             #set user unique id in database
             self.id = count
-            print("regislation success!")
+            self.password_hash = set_password(self.password)
+            db.session.execute(f"INSERT INTO users\
+                                 (id, user_id, password_hash)\
+                                 VALUES('{self.id}', ‘{self.user_id}', '{self.password_hash}')")
+            return True
         else:
-            print("user_id already exist!")
+            return False
 
     #delete an user
     def deleteUser(self):
         #user have validity
         if validity == 1:
             db.session.execute(f"DELETE FROM users .\
-                                 WHERE users.id = {self.user_id}")
+                                 WHERE users.id = '{self.user_id}'")
             print("current user have been removed")
         else:
             print("please log in first")

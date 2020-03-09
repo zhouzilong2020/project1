@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block nav %}
+  <li class="active"><a href={{ url_for('login') }}>Login</a></li>
+  <li><a href={{ url_for('register') }}>Register</a></li>
+{% endblock %}
+
+{% block body %}
+
+{% block error_message %}<!--错误信息-->
+{% endblock %}
+<div class="container-fluid"> <!--显示的标题-->
+  {% block heading %}
+  {% endblock %}
+</div>
+
+
+
+<form class = "form-horizongal" method="post">
+  <div class="form-group">
+    <label for="user_id">User's Name</label>
+    <input type="text" class="form-control" name="user_id" id="user_id" placeholder="User's Name">
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" name="password" id ="password" placeholder="Password">
+  </div>
+
+  <div class="text-center">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="checkbox" id="checkbox"> I agree my review to be post in this website.
+      </label>
+    </div>
+    <button type="submit" class="btn btn-default">SUBMIT</button>
+  </div>
+</form>
+{% endblock %}

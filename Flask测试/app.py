@@ -23,6 +23,16 @@ def test():
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+        #check checkbox
+        if request.form.get("checkbox"):
+            user = User(request.form.get('user_id'), request.form.get('password'))
+            #add user success
+            if user.addUser():
+                return redirect(url_for('homepage', user_id=user.user_id))
+
+    return render_template('register.html')
+
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -47,9 +57,8 @@ def loginNoFound():
     return render_template('login_nofound.html')
 
 
-@app.route('/homepage', methods = ['GET', 'POST'])
-def homepage(user):
-    user = User('meizijun' ,12)
+@app.route('/homepage/?<string:user_id>', methods = ['GET', 'POST'])
+def homepage(user_id):
     if request.method == 'POST':
         book = Book(request.form.get('title'),
                     request.form.get('isbn'),
@@ -59,8 +68,7 @@ def homepage(user):
             1+1
         else:
             return redirect(url_for('error_book_no_found'))
-
-    return render_template('homepage.html', user=user)
+    return render_template('homepage.html')
 
 
 def createTable():

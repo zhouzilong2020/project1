@@ -5,13 +5,16 @@
 Library System
 {% endblock %}
 
+
+{% block nav %}
+<li class="active"><a href={{ url_for('login') }}>Login</a></li>
+<li><a href={{ url_for('register') }}>Register</a></li>
+{% endblock %}
+
 {% block body %}
-
-
-
 <div class="container-fluid">
   <div class="page-header">
-    <h1> Library Retrieval System <small> v1.0 </small></h1>
+    <h1> Book Retrieval System <small> v1.0 </small></h1>
   </div>
 </div>
 
@@ -22,19 +25,24 @@ Library System
       and leave your own footprint on each book!
   </p>
   <p>
-    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg" href="#" role="button">Login in</a>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Register in</a>
+    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg" href="#" role="button">Login</a>
+    <a class="btn btn-primary btn-lg" href={{ url_for('register')}} role="button">Register</a>
   </p>
   <p>
     <small>If your haven't regiter yet, please register first!</small>
   </p>
 </div>
 
+
 <address>
-  <strong>ZiLong Zhou</strong><br>
-  Caoan Highway 4800
-  Tongji University<br>
+  <strong>Tongji University</strong><br>
+  Caoan Highway 4800<br>
   ShangHai, PRC <br>
+</address>
+
+<address>
+  <strong>Zilong Zhou</strong><br>
+  <a href="mailto:#">zhouzilong2020@gmail.com</a>
 </address>
 
 {% endblock %}

@@ -8,23 +8,17 @@ homepage
 {% endblock %}
 
 
+{% block nav %}
+<li role="presentation" class="active"><a href="#">Home</a></li>
+<li role="presentation"><a href="#">Profile</a></li>
+<li role="presentation"><a href="#">My Review</a></li>
+{% endblock %}
+
+
 {% block body %}
-
 <div class="page-header">
-  <h2> Welcome back! <small>{{user.user_id}}</small></h2>
+  <h2> Welcome back! <small>{{user_id}}</small></h2>
 </div>
-
-
-
-<nav role="tablist" stylesheet='homepage.css'>
-  <ul>
-    <li role="presentation" class="active"><a href="#">Home</a></li>
-    <li role="presentation"><a href="#">Profile</a></li>
-    <li role="presentation"><a href="#">My Review</a></li>
-  </ul>
-</nav>
-
-
 <form class="form-horizontal" method="post">
   <div class="form-group">
     <input type="text" class="form-control" id="isbn" name="isbn" placeholder="Isbn">
@@ -39,9 +33,7 @@ homepage
     <input type="text" class="form-control" id="year" name="year" placeholder="Year">
   </div>
   <div class="text-center">
-    <button type="submit" class="btn-default">Search!</button>
+    <button type="submit" class="btn btn-default">Search!</button>
   </div>
 </form>
-
-
-  {% endblock %}
+{% endblock %}
