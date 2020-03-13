@@ -1,9 +1,6 @@
 {% extends "layout.html" %}
 
-{% block nav %}
-  <li class="active"><a href={{ url_for('login') }}>Login</a></li>
-  <li><a href={{ url_for('register') }}>Register</a></li>
-{% endblock %}
+
 
 {% block body %}
 
@@ -27,13 +24,11 @@
     <input type="password" class="form-control" name="password" id ="password" placeholder="Password">
   </div>
 
-  <div class="text-center">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" name="checkbox" id="checkbox"> I agree my review to be post in this website.
-      </label>
+    {% block checkbox %}
+    {% endblock %}
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-default"">SUBMIT</button>
     </div>
-    <button type="submit" class="btn btn-default">SUBMIT</button>
-  </div>
 </form>
 {% endblock %}

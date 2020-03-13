@@ -21,7 +21,7 @@ class User(db.Model):
         self.user_id = str(user_id)
         self.password = str(password)
         self.validity = 0
-    
+
     def __repr__(self):
         return '<user %s>' % self.user_id
 
@@ -71,9 +71,9 @@ class User(db.Model):
             #set user unique id in database
             self.id = User.count
             self.set_password()
-            db.session.execute(f"INSERT INTO users\
+            db.session.execute(f'''INSERT INTO users\
                                  (id, user_id, password_hash)\
-                                 VALUES('{self.id}', ‘{self.user_id}', '{self.password_hash}')")
+                                 VALUES(\'{self.id}\', \'\'\'{self.user_id}\'\'\', \'\'\'{self.password_hash}\'\'\' )''')
             return True
         else:
             return False

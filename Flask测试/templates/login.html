@@ -1,5 +1,10 @@
 {% extends "login_register_layout.html" %}
 
+{% block nav %}
+  <li class="active"><a href={{ url_for('login') }}>Login</a></li>
+  <li><a href={{ url_for('register') }}>Register</a></li>
+{% endblock %}
+
 {% block title %}
     login
 {% endblock %}
