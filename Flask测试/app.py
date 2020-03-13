@@ -3,6 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from models import *
 
 app = Flask(__name__)
+
+
+app.config.setdefault('BOOTSTRAP_SERVE_LOCAL', True)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:20001003@localhost:5432/test"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 app.config["SESSION_PERMANENT"] = False
@@ -20,6 +24,8 @@ def index():
 @app.route('/test')
 def test():
     return render_template('test.html')
+
+
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
