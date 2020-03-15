@@ -2,26 +2,26 @@
 
 
 
+{% block head %}
+
+{% endblock %}
+
 {% block body %}
 
-{% block error_message %}<!--错误信息-->
-{% endblock %}
 
 <div class="container-fluid"> <!--显示的标题-->
   {% block heading %}
   {% endblock %}
 </div>
 
-
-
 <form class = "form-horizongal" method="post">
   <div class="form-group">
     <label for="user_id">User's Name</label>
-    <input type="text" class="form-control" name="user_id" id="user_id" placeholder="User's Name">
+    <input type="text" class="form-control" name="user_id" id="user_id" placeholder="User's Name" required>
   </div>
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" class="form-control" name="password" id ="password" placeholder="Password">
+    <input type="password" class="form-control" name="password" id ="password" placeholder="Password" required>
   </div>
 
     {% block checkbox %}

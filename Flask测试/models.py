@@ -22,8 +22,6 @@ class User(db.Model):
         self.password = str(password)
         self.validity = 0
 
-    def __repr__(self):
-        return '<user %s>' % self.user_id
 
     def currentStatus(self):
         return True if validity == 1 else False
@@ -32,50 +30,30 @@ class User(db.Model):
          #save password hash value into class's attribute
          self.password_hash = generate_password_hash(self.password)
 
-    def validate_password(self, password):
-        #return a boolen value
-        return check_password_hash(self.password_hash, password)
-
     #log in user
     def login(self):
         #判断当前用户是否存在
         try:
-            exist_user_password = db.session.execute(f'''SELECT password \
-                                                         FROM users \
-                                                         WHERE user_id == "{self.user_id}" ''').first()
+            exist_user = User.query.filter_by(user_id = self.user_id).first()
             #当前用户名存在，并且密码匹配
-            if exist_user_password is not None:
-                if validate_password(exist_user_password):
+            if exist_user is not None:
+                if check_password_hash(exist_user.password_hash, self.password):
                     validaty = 1
-            return True
+                    return True
         except:
             return False
 
-    #log out user
-    def logout(self):
-        if validity == 1:
-            validity = 0
-            print("you have logged out")
-        else:
-            print("error!")
-
     #add a new user
     def addUser(self):
-        is_exist = db.session.execute(f"SELECT * \
-                                       FROM users \
-                                       WHERE user_id = '{self.user_id}' ").first()
-        #current user_id does not exist
-        if is_exist is None:
-            #increase user number by 1
-            User.count += 1
+        try:
             #set user unique id in database
             self.id = User.count
             self.set_password()
-            db.session.execute(f'''INSERT INTO users\
-                                 (id, user_id, password_hash)\
-                                 VALUES(\'{self.id}\', \'\'\'{self.user_id}\'\'\', \'\'\'{self.password_hash}\'\'\' )''')
+            db.session.add(self)
+            db.session.commit()
+            User.count += 1
             return True
-        else:
+        except:
             return False
 
     #delete an user

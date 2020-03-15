@@ -1,17 +1,21 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from models import *
-
+from datetime import timedelta
 app = Flask(__name__)
 
 
 app.config.setdefault('BOOTSTRAP_SERVE_LOCAL', True)
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:20001003@localhost:5432/test"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"   #filesystem允许用户对数据进行更改、插入、删除等操作
 app.config['SECRET_KEY'] = 'dev'  # 等同于 app.secret_key = 'dev'
+
+app._static_folder = "./templates/static"
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds = 1)
 
 db.init_app(app)
 
@@ -25,42 +29,19 @@ def index():
 def test():
     return render_template('test.html')
 
-def registerFun():
-    if not request.form.get("checkbox"):
-        error_message = "Pleas check the user's aggreement first!"
-        return redirect(url_for('registerError', error_message = error_message))
-
-    user_id = request.form.get('user_id')
-    password = request.form.get('password')
-    # empty input
-    if user_id == '' or password == '':
-        error_message = "User's id and password cann't be empty!"
-        return redirect(url_for('registerError', error_message = error_message))
-
-    user = User(user_id, password)
-    #add user successfully
-    if user.addUser():
-        return redirect(url_for('homepage', user_id=user.user_id))
-    else:
-        error_message="Opps someting just happened, please try again or contact administrator"
-        return redirect(url_for('registerError', error_message = error_message))
-
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        registerFun()
+        user_id = request.form.get('user_id')
+        password = request.form.get('password')
+        user = User(user_id, password)
+        #add user successfully
+        if user.addUser():
+            return redirect(url_for('homepage', user_id=user.user_id))
+        else:
+            error_message="User's name have been used"
+            return redirect(url_for('error', error_message = error_message))
     return render_template('register.html')
-
-
-@app.route('/register/error/?<string:error_message>', methods=['GET','POST'])
-def registerError(error_message):
-    if request.method == 'POST':
-        registerFun()
-    return render_template('register_error.html', error_message= error_message)
-
-
-
-
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -69,18 +50,18 @@ def login():
         user = User(request.form.get('user_id'), request.form.get('password'))
         #如果成功登录
         if user.login():
-            return redirect(url_for('homepage'))
+            return redirect(url_for('homepage', user_id = user.user_id))
         else:
             error_message = "User dosen't exist or password doesn't match"
-            return redirect(url_for('loginError', error_message = error_message))
-
+            return redirect(url_for('error', error_message = error_message))
     return render_template('login.html')
 
-@app.route('/login/error/?<string:error_message>', methods=['GET','POST'])
-def loginError(error_message):
+
+@app.route('/error/?<string:error_message>', methods=['GET','POST'])
+def error(error_message):
     if request.method == 'POST':
-        login()
-    return render_template('login_error.html', error_message= error_message)
+        return redirect(url_for('index'))
+    return render_template('error.html', error_message= error_message)
 
 
 @app.route('/homepage/?<string:user_id>', methods = ['GET', 'POST'])
