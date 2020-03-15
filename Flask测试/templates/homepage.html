@@ -15,7 +15,7 @@ homepage
 
 {% block body %}
 <div class="page-header">
-  <h1> Welcome back! <string>{{user_id}}</string></h1>
+  <h1> Welcome back! <strong>{{user_id}}</strong></h1>
   <h2><small>Search your book here</small></h2>
 
   <form class="form-inline " method="post">
@@ -60,7 +60,7 @@ homepage
       {% for book in books %}
         <tr href={{ url_for('homepage', user_id=user_id) }} >
           <td>{{book.isbn}}</td>
-          <td><a href="#">{{book.title}}</a></td>
+          <td><a href={{ url_for('bookpage', isbn=book.isbn, user_id=user_id)}}>{{book.title}}</a></td>
           <td>{{book.author}}</td>
           <td>{{book.year}}</td>
         </tr>

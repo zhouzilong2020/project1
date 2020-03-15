@@ -71,9 +71,31 @@ def homepage(user_id):
                       request.form.get('author'),request.form.get('year'))
         books =  user_input.search()
         return render_template('homepage.html', user_id = user_id, books = books)
-
     books=[Book("Please type above","--","--","--")]
     return render_template('homepage.html', user_id = user_id, books = books)
+
+
+
+@app.route('/book/?<string:isbn>/?<string:user_id>', methods=['GET', 'POST'])
+def bookpage(isbn, user_id):
+    book = Book.query.filter_by(isbn = isbn).first()
+    reviews = []
+    return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def createTable():
