@@ -67,15 +67,13 @@ def error(error_message):
 @app.route('/homepage/?<string:user_id>', methods = ['GET', 'POST'])
 def homepage(user_id):
     if request.method == 'POST':
-        book = Book(request.form.get('title'),
-                    request.form.get('isbn'),
-                    request.form.get('author'),
-                    request.form.get('year'))
-        if book.search():
-            1+1
-        else:
-            return redirect(url_for('error_book_no_found'))
-    return render_template('homepage.html', user_id = user_id)
+        user_input =  Book(request.form.get('title'),request.form.get('isbn'),
+                      request.form.get('author'),request.form.get('year'))
+        books =  user_input.search()
+        return render_template('homepage.html', user_id = user_id, books = books)
+
+    books=[Book("Please type above","--","--","--")]
+    return render_template('homepage.html', user_id = user_id, books = books)
 
 
 def createTable():

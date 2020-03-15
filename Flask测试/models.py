@@ -78,9 +78,9 @@ class Book(db.Model):
     author = db.Column(db.String, nullable = False)
     year = db.Column(db.Integer, nullable = False)
 
-    def __init__(self, isbn, auther, title, year):
+    def __init__(self, isbn, author, title, year):
         self.isbn = isbn
-        self.auther = auther
+        self.author = author
         self.title = title
         self.year = year
 
@@ -93,18 +93,18 @@ class Book(db.Model):
     #search a book through isbn/auther/title with partialy or entirely information
     def search(self):
         try:
-            isbnExist = db.session.excute(f"SELECT * \
-                                            FROM books \
-                                            WHERE books.isbn LIKE ''%{self.isbn}%'' ").fetchall()
-            titleExist = db.session.excute(f"SELECT * \
-                                             FROM books \
-                                             WHERE books.title LIKE ''%{self.title}%'' ").fetchall()
-            AuthorExist = db.session.excute(f"SELECT * \
-                                              FROM books \
-                                              WHERE books.title LIKE ''%{self.author}%'' ").fetchall()
-            return [isbnExist, titleExist, AuthorExist]
+            result = []
+            books_title = Book.query.filter_by(title = self.title).all()
+            books_isbn = Book.query.filter_by(isbn = self.isbn).all()
+            books_author = Book.query.filter_by(author = self.author).all()
+            books_year = Book.query.filter_by(year = self.year).all()
+            result.extend(books_isbn)
+            result.extend(books_title)
+            result.extend(books_author)
+            result.extend(books_year)
+            return result
         except:
-            return False
+            return None
 
 
 class Review(db.Model):
