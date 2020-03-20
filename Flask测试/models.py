@@ -133,10 +133,16 @@ class Review(db.Model):
     comment = db.Column(db.String, nullable = False)
     rate = db.Column(db.Integer, nullable = False)
 
-    def writeReview(self, comment, title, rate, revier_author):
-        count +=1
-        self.id = Review.id
-        db.session.excute(f"INSERT INTO reviews .\
-                           (id, title, user_id, comment, rate) .\
-                           VALUES ('{self.id}','{self.title}', '{self.user_id}', '{self.comment}', '{self.rate}' ")
-        print("comment success!")
+    def __init__(self, isbn, user_id, comment, rate):
+        self.isbn = isbn
+        self.user_id = user_id
+        self.comment = comment
+        self.rate = rate
+
+    def addReview(self):
+        isExist = Review.query.filter_by(user_id = self.user_id, isbn = self.isbn).count()
+        if isExist != 0:
+            return False
+        db.session.add(self)
+        db.session.commit()
+        return True

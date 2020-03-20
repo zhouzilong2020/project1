@@ -79,10 +79,24 @@ def homepage(user_id):
 @app.route('/book/?<string:isbn>/?<string:user_id>', methods=['GET', 'POST'])
 def bookpage(isbn, user_id):
     book = Book.query.filter_by(isbn = isbn).first()
-    reviews = []
+    reviews = Review.query.filter_by(isbn = isbn).all()
+    if request.method == 'POST':
+        comment = request.form.get('user_comment')
+        for i in range(5):
+            rate = request.form.get('inlineRadioOptions')
+            if rate is not None: break
+        review = Review(isbn, user_id, comment, rate)
+        if review.addReview():
+            reviews.append(review)
+            return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id)
+        else:
+            error_message = "You have commented on this book already!"
+            return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, error_message = error_message)
     return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id)
 
-
+@app.route('/test')
+def test():
+    return render_template('test.html')
 
 def createTable():
     with app.app_context():
