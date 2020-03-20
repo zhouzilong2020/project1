@@ -66,8 +66,8 @@ def error(error_message):
 @app.route('/homepage/?<string:user_id>', methods = ['GET', 'POST'])
 def homepage(user_id):
     if request.method == 'POST':
-        user_input =  Book(request.form.get('title'),request.form.get('isbn'),
-                      request.form.get('author'),request.form.get('year'))
+        user_input =  Book(request.form.get('isbn'),request.form.get('author'),
+                      request.form.get('title'),request.form.get('year'))
         books =  user_input.search()
         return render_template('homepage.html', user_id = user_id, books = books)
     books=[Book("Please type above","--","--","--")]
@@ -77,13 +77,10 @@ def homepage(user_id):
 
 @app.route('/book/?<string:isbn>/?<string:user_id>', methods=['GET', 'POST'])
 def bookpage(isbn, user_id):
-
-
     book = Book.query.filter_by(isbn = isbn).first()
     reviews = Review.query.filter_by(isbn = isbn).all()
     # using goodreags API to get average_rate
     res = requests.get("https://www.goodreads.com/book/review_counts.json",params={"key": "8lKPBXKVsRdsxFn9u0U0w", "isbns": isbn})
-
 
     try:
         res = res.json()

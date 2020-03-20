@@ -95,19 +95,18 @@ class Book(db.Model):
         try:
             # 好像只有varchar属性支持模糊查找，int不太行，只能在宿主语言中实现了！
             # 先对string变量的列值进行模糊查找，year最后进行修正
-            if self.year is not None:
+            if self.year != '':
                 result = Book.query.filter_by(year = self.year).filter(
-                    Book.title.ilike("%" + self.title + "%") if self.title is not None else "",
-                    Book.author.ilike("%" + self.author + "%") if self.author is not None else "",
-                    Book.isbn.ilike("%" + self.isbn + "%") if self.isbn is not None else ""
-                    ).all()
+                    Book.title.ilike("%" + f'{self.title}' + "%") if self.title is not None else "",
+                    Book.author.ilike("%" + f'{self.author}' + "%") if self.author is not None else "",
+                    Book.isbn.ilike("%" + f'{self.isbn}' + "%") if self.isbn is not None else "").all()
             else:
-                 result = Book.query.filter(
+                result = Book.query.filter(
                      Book.title.ilike("%" + self.title + "%") if self.title is not None else "",
                      Book.author.ilike("%" + self.author + "%") if self.author is not None else "",
-                     Book.isbn.ilike("%" + self.isbn + "%") if self.isbn is not None else ""
-                     ).all()
+                     Book.isbn.ilike("%" + self.isbn + "%") if self.isbn is not None else "").all()
             return result
+
         except:
             return None
 
