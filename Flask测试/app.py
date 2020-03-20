@@ -84,20 +84,6 @@ def bookpage(isbn, user_id):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def createTable():
     with app.app_context():
         db.create_all()

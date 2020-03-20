@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block nav %}
+<li><a href={{ url_for('homepage', user_id=user_id) }} class="actice">Home</a></li>
+<li><a href={{ url_for('index') }}>Logout</a></li>
+{% endblock %}
+
+
+{% block body %}
+<div class="blog-header">
+  <i><h1 class="blog-title">{{book.title}}</h1></i>
+  <p class="lead blog-description">
+    <cite title="Source Title">{{book.author}} {{book.year}}</cite>
+  </p>
+</div>
+
+<div class="row">
+
+      <div class="col-sm-8 blog-main">
+
+        <div class="blog-post">
+
+          <blockquote>
+            <h3 class="blog-post-title">Review1</h3>
+            <p class="blog-post-meta">by User_id</p>
+            <p>Review</p>
+
+              12345<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+          </blockquote>
+
+
+
+
+
+        <hr></div><!-- /.review-post -->
+        <div class="my-review">
+          <textarea class="form-control" rows="3" required>text your review here</textarea>
+          <label class="radio-inline" >
+            <input type="radio" name="inlineRadioOptions" id="one" value="1">1<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="two" value="2">2<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="three" value="3">3<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="four" value="4">4<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="five" value="5">5<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+          </label>
+          <div >
+            <button type="submit" class="btn btn-default">Submit!</button>
+          </div>
+        </div><!-- my review -->
+
+      </div><!-- /.review-div -->
+
+</div>
+
+{% endblock %}

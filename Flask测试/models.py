@@ -93,15 +93,20 @@ class Book(db.Model):
     #search a book through isbn/auther/title with partialy or entirely information
     def search(self):
         try:
-            result = []
-            books_title = Book.query.filter_by(title = self.title).all()
-            books_isbn = Book.query.filter_by(isbn = self.isbn).all()
-            books_author = Book.query.filter_by(author = self.author).all()
-            books_year = Book.query.filter_by(year = self.year).all()
-            result.extend(books_isbn)
-            result.extend(books_title)
-            result.extend(books_author)
-            result.extend(books_year)
+            # 好像只有varchar属性支持模糊查找，int不太行，只能在宿主语言中实现了！
+            # 先对string变量的列值进行模糊查找，year最后进行修正
+            if self.year is not None:
+                result = Book.query.filter_by(year = self.year).filter(
+                    Book.title.ilike("%" + self.title + "%") if self.title is not None else "",
+                    Book.author.ilike("%" + self.author + "%") if self.author is not None else "",
+                    Book.isbn.ilike("%" + self.isbn + "%") if self.isbn is not None else ""
+                    ).all()
+            else:
+                 result = Book.query.filter(
+                     Book.title.ilike("%" + self.title + "%") if self.title is not None else "",
+                     Book.author.ilike("%" + self.author + "%") if self.author is not None else "",
+                     Book.isbn.ilike("%" + self.isbn + "%") if self.isbn is not None else ""
+                     ).all()
             return result
         except:
             return None
