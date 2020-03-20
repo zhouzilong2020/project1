@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+Library System
+{% endblock %}
+
+
+{% block nav %}
+<li><a href={{ url_for('login') }}>Login</a></li>
+<li><a href={{ url_for('register') }}>Register</a></li>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+  <div class="page-header">
+    <h1> Book Retrieval System <small> v1.0 </small></h1>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <h1>Welcome!</h1>
+  <p>To discover thousands of books
+      , review comment from other
+      and leave your own footprint on each book!
+  </p>
+  <p>
+    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg" href="#" role="button">Login</a>
+    <a class="btn btn-primary btn-lg" href={{ url_for('register')}} role="button">Register</a>
+  </p>
+  <p>
+    <small>If your haven't regiter yet, please register first!</small>
+  </p>
+</div>
+{% endblock %}

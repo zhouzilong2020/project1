@@ -1,0 +1,21 @@
+
+{% extends "layout.html" %}
+
+{% block nav %}
+  <li><a href={{ url_for('login') }}>Login</a></li>
+  <li><a href={{ url_for('register') }}>Register</a></li>
+{% endblock %}
+
+
+
+{% block error_message %}
+<div class="alert alert-warning alert-dismissible text-center" role="alert">
+
+  <h3><strong>{{error_message}}</strong></h3>
+
+  <div class="text-center">
+    <a class="btn btn-default" href={{ url_for('index') }} role="button">Back</a>
+  </div>
+
+</div>
+{% endblock %}
