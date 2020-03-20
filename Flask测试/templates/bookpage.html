@@ -16,6 +16,10 @@
   <p class="lead blog-description">
     <cite title="Source Title">{{book.author}} ({{book.year}}) ({{book.isbn}})</cite>
   </p>
+  {% if average_rate %}
+  <h2>average rate from goodreads:{{average_rate}}</h2>
+  {% endif %}
+
 </div>
 
 

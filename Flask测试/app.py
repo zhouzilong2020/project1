@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from models import *
 from datetime import timedelta
+import requests
 app = Flask(__name__)
 
 
@@ -24,10 +25,6 @@ db.init_app(app)
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/test')
-def test():
-    return render_template('test.html')
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -78,8 +75,20 @@ def homepage(user_id):
 
 @app.route('/book/?<string:isbn>/?<string:user_id>', methods=['GET', 'POST'])
 def bookpage(isbn, user_id):
+
+
     book = Book.query.filter_by(isbn = isbn).first()
     reviews = Review.query.filter_by(isbn = isbn).all()
+    # using goodreags API to get average_rate
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",params={"key": "8lKPBXKVsRdsxFn9u0U0w", "isbns": isbn})
+
+
+    try:
+        res = res.json()
+        average_rate = res['books'][0]['average_rating']
+    except:
+        average_rate=None
+
     if request.method == 'POST':
         comment = request.form.get('user_comment')
         for i in range(5):
@@ -88,15 +97,37 @@ def bookpage(isbn, user_id):
         review = Review(isbn, user_id, comment, rate)
         if review.addReview():
             reviews.append(review)
-            return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id)
+            return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, average_rate = average_rate)
         else:
             error_message = "You have commented on this book already!"
-            return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, error_message = error_message)
-    return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id)
+            return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, error_message = error_message, average_rate = average_rate)
+    return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, average_rate = average_rate)
+
+
 
 @app.route('/test')
 def test():
-    return render_template('test.html')
+    isbn = 743484355
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",
+        params={"key": "8lKPBXKVsRdsxFn9u0U0w", "isbns": isbn})
+    try:
+        res = res.json()
+        average_rate = res[average_rating]
+    except:
+        1+1
+    return render_template('test.html', res = res)
+
+
+
+
+
+
+
+
+
+
+
+
 
 def createTable():
     with app.app_context():
