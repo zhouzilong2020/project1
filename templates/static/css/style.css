@@ -23,6 +23,12 @@ body {
   height: auto;
 }
 
+.my-review{
+  position: relative;
+  margin-bottom: 200px;
+  height: auto;
+  bottom: auto;
+}
 
 /*
  * Blog name and description

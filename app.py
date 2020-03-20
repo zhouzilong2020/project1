@@ -68,6 +68,7 @@ def homepage(user_id):
     if request.method == 'POST':
         user_input =  Book(request.form.get('isbn'),request.form.get('author'),
                       request.form.get('title'),request.form.get('year'))
+
         books =  user_input.search()
         return render_template('homepage.html', user_id = user_id, books = books)
     books=[Book("Please type above","--","--","--")]
