@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from models import *
 from datetime import timedelta
 import requests
@@ -10,6 +11,7 @@ app.config.setdefault('BOOTSTRAP_SERVE_LOCAL', True)
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:20001003@localhost:5432/test"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"   #filesystem允许用户对数据进行更改、插入、删除等操作
@@ -99,35 +101,40 @@ def bookpage(isbn, user_id):
             reviews.append(review)
             return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, average_rate = average_rate)
         else:
-            error_message = "You have commented on this book already!"
+            # error_message = "You have commented on this book already!"
             return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, error_message = error_message, average_rate = average_rate)
     return render_template('bookpage.html', book = book, reviews = reviews, user_id = user_id, average_rate = average_rate)
 
 
+# * `200 OK`
+# * `201 Created`
+# * `400 Bad Request`
+# * `403 Forbidden`
+# * `404 Not Found`
+# * `405 Method Not Allowed`
+# * `422 Unprocessable Entity`
+@app.route('/api/')
+def review_api():
+    isbn = request.args.get('isbn')
+    book = Book.query.filter_by(isbn = isbn).first()
+    if book:
+        review_count = Review.query.filter_by(isbn = isbn).count()
+        # 返回的是一个python decimal的类型需要在转换一次
+        average_rating = Review.query.filter_by(isbn = isbn).with_entities(func.avg(Review.rate)).first()
+        avg = float(average_rating[0])
+    else:
+        return jsonify({"error": "ISBN Not Found"}), 404
 
-@app.route('/test')
-def test():
-    isbn = 743484355
-    res = requests.get("https://www.goodreads.com/book/review_counts.json",
-        params={"key": "8lKPBXKVsRdsxFn9u0U0w", "isbns": isbn})
-    try:
-        res = res.json()
-        average_rate = res[average_rating]
-    except:
-        1+1
-    return render_template('test.html', res = res)
+    return jsonify({
+        "isbn" : book.isbn,
+        "title": book.title,
+        "author":book.author,
+        "year":book.year,
+        "review_count":review_count,
+        "average_rating":avg
+    }), 200
 
-
-
-
-
-
-
-
-
-
-
-
+    # 006117758X
 
 def createTable():
     with app.app_context():
